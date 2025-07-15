@@ -4,7 +4,26 @@
   
     
     <entry>
-      <title>Vasp案例</title>
+      <title>Vasp学习备忘录（2）——三种KPOINTS</title>
+      <link href="/posts/e38cb4cc/"/>
+      <url>/posts/e38cb4cc/</url>
+      
+        <content type="html"><![CDATA[<p>三种自动设置K点的方式：<strong>Auto，Gamma，Monkhorst</strong>。</p><h2 id="Auto-格式的KPOINTS文件"><a href="#Auto-格式的KPOINTS文件" class="headerlink" title="Auto 格式的KPOINTS文件"></a>Auto 格式的KPOINTS文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Automatic mesh         #注释行</span><br><span class="line">0                      #表示要自动产生k点了</span><br><span class="line">Auto                   #自动产生k的方法选为Auto，只看首字母</span><br><span class="line">I                      #参数I，倒易空间中的网格间距为I^(-1)。</span><br></pre></td></tr></table></figure><ol><li>Auto方式实际上指定了倒易空间中K-mesh的密度，因此在计算同一个体系的单胞、超胞时，可以使用同样的I值（默认单位是&Aring;）。通常l取10（对于大gap的绝缘体），~100（d-金属）。</li><li>按照（1）的说法，因为近似有k|a| &#x3D; l，即某个方向上的K点个数k，乘以这个方向的晶胞常数|a|，得到一个大约50左右的数比较合适。</li><li>注意：由于k &#x3D; max(1, l|b|+0.5)，所以对slab模型可能会在z方向上k &gt;1（虽然|b|&#x3D;1&#x2F;|c|确实比较小），所以slab模型用Auto可能会不适合。</li></ol><h2 id="G或M格式的KPOINTS文件"><a href="#G或M格式的KPOINTS文件" class="headerlink" title="G或M格式的KPOINTS文件"></a>G或M格式的KPOINTS文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Automatic mesh         #注释行</span><br><span class="line">0                      #表示要自动产生k点了</span><br><span class="line">Gamma                  #自动产生k的方法选为G，还可选Monkhorst。只看首字母。</span><br><span class="line">k1 k2 k3               #三个方向分别多少个k点。</span><br><span class="line">0  0  0                #K网格的平移</span><br></pre></td></tr></table></figure><ol><li><p>关于平移：Monkhorst with (0.5 0.5 0.5)的平移，就等价于Gamma with (0 0 0)，Gamma with (0.5 0.5 0.5)的平移，就等价于Monkhorst with (0 0 0)，所以一般网格平移都写为0 0 0。</p></li><li><p>三种模式实际上产生的都是Monkhorst-Pack grids，其中Auto和Gamma的K-mesh中包含Γ点，即是Gamma centered，而Monkhorst不一定。</p></li><li><p>对于奇数K点，Gamma和Monkhorst-Pack效果完全一样，都包含Γ点，而对偶数情况，M和G才会不一样。<img src="/images/image-20250715102153890.png" alt="image-20250715102153890"></p></li><li><p>下面以一维的K-mesh为例，</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">k=5，       G和M一样：        0, ±1/5, ±2/5。</span><br><span class="line">k=6，       G：              0, ±1/6, ±2/6, 3/6 （注意没有-3/6，因为它与3/6重合）</span><br><span class="line">            M：              ±1/12, ±3/12, ±5/12</span><br><span class="line">k=7，       G和M一样：        0, ±1/7, ±2/7，±3/7，</span><br></pre></td></tr></table></figure><p>可以看出，如果体系是关于中心对称的，则<br>(1)对与G来说，k为偶数时，K点的分布是不对称的，导致其不可约点的个数较多，因此与k+1（奇数）的结果比较接近。（k&#x3D;6和k&#x3D;7时都有4个不可约K点）。<br>(2) 而对M来说，k为偶数时，K点分布对称，导致不可约的K点数目少，因此与k-1（奇数）的时候接近（k&#x3D;6和k&#x3D;5时都有3个不可约的K点）。<br>这就是为什么一般会说：对于G用偶数的k，对于M用奇数的k（而此时M与G一致)。若体系没有对称性，则使用何种K-mesh与奇偶无关。一般考虑包括Γ点的K-mesh，即G-mesh。</p></li></ol><p>结论：使用Gamma形式的K-mesh，其中k点数目少的时候k设为偶数为佳。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> DFT </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Vasp学习备忘录（3）——Vasp案例</title>
       <link href="/posts/d95f3c49/"/>
       <url>/posts/d95f3c49/</url>
       
@@ -23,7 +42,7 @@
     
     
     <entry>
-      <title>Python学习记录：脚本处理微分电容（dQ/dV）曲线</title>
+      <title>Python学习记录（1）——脚本处理微分电容（dQ/dV）曲线</title>
       <link href="/posts/d8b9edbc/"/>
       <url>/posts/d8b9edbc/</url>
       
@@ -42,7 +61,7 @@
     
     
     <entry>
-      <title>Vasp输入参数</title>
+      <title>Vasp学习备忘录（1）——输入参数</title>
       <link href="/posts/ef0a8c6d/"/>
       <url>/posts/ef0a8c6d/</url>
       
@@ -96,6 +115,17 @@
     
     
     <entry>
+      <title>分类</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>关于</title>
       <link href="/about/index.html"/>
       <url>/about/index.html</url>
@@ -110,17 +140,6 @@
       <title>链接</title>
       <link href="/link/index.html"/>
       <url>/link/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>分类</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
